@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Flow UI - Demo</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Instrument Serif', Georgia, serif;
+      background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0f1419 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+      align-items: center;
+    }
+
+    .counter-display {
+      position: fixed;
+      top: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(10, 14, 39, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 1.5rem 2.5rem;
+      backdrop-filter: blur(10px);
+      color: #ffffff;
+      text-align: center;
+    }
+
+    .counter-label {
+      font-size: 0.9rem;
+      opacity: 0.6;
+      margin-bottom: 0.5rem;
+    }
+
+    .counter-value {
+      font-size: 3rem;
+      font-weight: 300;
+    }
+
+    .instructions {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        gap: 2rem;
+      }
+
+      .counter-display {
+        top: 1rem;
+        padding: 1rem 2rem;
+      }
+
+      .counter-value {
+        font-size: 2.5rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="counter-display">
+    <div class="counter-label">Count</div>
+    <div class="counter-value" id="counter">0</div>
+  </div>
+
+  <div class="container" id="eddyContainer"></div>
+
+  <div class="instructions">
+    Three separate eddies • Touch & hold to activate
+  </div>
+
+  <script type="module">
+    import { Eddy, Pool } from './src/index.ts';
+
+    let count = 0;
+
+    const infoPool = new Pool({
+      color: '#f59e0b',
+      content: `
+        <h2>Info Pool</h2>
+        <p>
+          This pool was created as a separate instance and connected to an eddy.
+          Each component is completely independent.
+        </p>
+        <p>
+          You can create as many eddies and pools as you need, each with their
+          own colors, sizes, and behaviors.
+        </p>
+      `
+    });
+    infoPool.mount('body');
+
+    const eddy1 = new Eddy({
+      color: '#10b981',
+      size: 200,
+      label: 'Count Up',
+      sublabel: 'Instance 1',
+      onActivate: () => {
+        count++;
+        document.getElementById('counter').textContent = count;
+      }
+    });
+
+    const eddy2 = new Eddy({
+      color: '#6366f1',
+      size: 200,
+      label: 'Alert',
+      sublabel: 'Instance 2',
+      onActivate: () => {
+        alert('Eddy 2 activated! 🌊');
+      }
+    });
+
+    const eddy3 = new Eddy({
+      color: '#f59e0b',
+      size: 200,
+      label: 'Info Pool',
+      sublabel: 'Instance 3',
+      onActivate: () => {
+        infoPool.enter();
+      }
+    });
+
+    eddy1.mount('#eddyContainer');
+    eddy2.mount('#eddyContainer');
+    eddy3.mount('#eddyContainer');
+  </script>
+</body>
+
+</html>

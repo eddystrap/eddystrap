@@ -1,0 +1,75 @@
+/* Eddystrap - Shared Animations and Styles */
+
+@keyframes flowRipple {
+  from {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0.8;
+  }
+  to {
+    transform: translate(-50%, -50%) scale(2.5);
+    opacity: 0;
+  }
+}
+
+@keyframes flowPoolRise {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes flowRippleIn {
+  0% {
+    transform: scale(0.85) translateY(20px);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.02) translateY(-5px);
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Pool content default styles */
+.flow-pool-content h1,
+.flow-pool-content h2,
+.flow-pool-content h3 {
+  font-weight: 300;
+  margin-bottom: 1.5rem;
+}
+
+.flow-pool-content h2 {
+  font-size: 2.5rem;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.flow-pool-content p {
+  opacity: 0.85;
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+  font-size: 1.05rem;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 600px) {
+  .flow-pool-surface {
+    padding: 2rem 1.5rem !important;
+  }
+
+  .flow-pool-content h2 {
+    font-size: 1.8rem !important;
+  }
+
+  .flow-pool-content p {
+    font-size: 0.95rem !important;
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "name": "eddystrap",
+  "version": "0.2.0",
+  "description": "Natural kinetic UI components for the web",
+  "type": "module",
+  "main": "dist/eddystrap.umd.js",
+  "module": "dist/eddystrap.es.js",
+  "types": "dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/eddystrap.es.js",
+      "require": "./dist/eddystrap.umd.js"
+    },
+    "./styles.css": "./dist/style.css"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "ui",
+    "kinetic",
+    "natural",
+    "interaction",
+    "eddy",
+    "pool",
+    "press-and-hold",
+    "commitment",
+    "time-based"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eddystrap/eddystrap.git"
+  },
+  "bugs": {
+    "url": "https://github.com/eddystrap/eddystrap/issues"
+  },
+  "homepage": "https://github.com/eddystrap/eddystrap#readme",
+  "devDependencies": {
+    "@types/node": "^25.0.3",
+    "@vitest/coverage-v8": "^4.0.16",
+    "@vitest/ui": "^4.0.16",
+    "happy-dom": "^20.0.11",
+    "jsdom": "^27.0.1",
+    "typescript": "^5.9.3",
+    "vite": "^5.0.0",
+    "vite-plugin-dts": "^4.5.4",
+    "vitest": "^4.0.16"
+  }
+}

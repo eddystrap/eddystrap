@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Flow UI - Standalone Demo</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Instrument Serif', Georgia, serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0f1419 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .counter-display {
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(10, 14, 39, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.5rem 2.5rem;
+            backdrop-filter: blur(10px);
+            color: #ffffff;
+            text-align: center;
+        }
+
+        .counter-label {
+            font-size: 0.9rem;
+            opacity: 0.6;
+            margin-bottom: 0.5rem;
+        }
+
+        .counter-value {
+            font-size: 3rem;
+            font-weight: 300;
+        }
+
+        .instructions {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        @keyframes flowRipple {
+            from {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 0.8;
+            }
+
+            to {
+                transform: translate(-50%, -50%) scale(2.5);
+                opacity: 0;
+            }
+        }
+
+        @keyframes flowPoolRise {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes flowRippleIn {
+            0% {
+                transform: scale(0.85) translateY(20px);
+                opacity: 0;
+            }
+
+            60% {
+                transform: scale(1.02) translateY(-5px);
+            }
+
+            100% {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .flow-pool-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 300;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .flow-pool-content p {
+            opacity: 0.85;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+            font-size: 1.05rem;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                gap: 2rem;
+            }
+
+            .counter-display {
+                top: 1rem;
+                padding: 1rem 2rem;
+            }
+
+            .counter-value {
+                font-size: 2.5rem;
+            }
+
+            .flow-pool-surface {
+                padding: 2rem 1.5rem !important;
+            }
+
+            .flow-pool-content h2 {
+                font-size: 1.8rem !important;
+            }
+
+            .flow-pool-content p {
+                font-size: 0.95rem !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="counter-display">
+        <div class="counter-label">Count</div>
+        <div class="counter-value" id="counter">0</div>
+    </div>
+
+    <div class="container" id="eddyContainer"></div>
+
+    <div class="instructions">
+        Three separate eddies • Touch & hold to activate
+    </div>
+
+    <script>
+        // Inline the Eddy and Pool components
+        class Eddy {
+            constructor(options = {}) {
+                this.options = {
+                    color: '#6366f1',
+                    size: 200,
+                    activationTime: 500,
+                    onActivate: null,
+                    label: 'Eddy',
+                    sublabel: 'Touch & hold',
+                    ...options
+                };
+
+                this.element = null;
+                this.commitment = 0;
+                this.isActive = false;
+                this.startTime = null;
+                this.animationFrame = null;
+
+                this.create();
+            }
+
+            create() {
+                this.element = document.createElement('div');
+                this.element.style.cssText = `
+          position: relative;
+          width: ${this.options.size}px;
+          height: ${this.options.size}px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          touch-action: manipulation;
+          -webkit-tap-highlight-color: transparent;
+          transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+        `;
+
+                const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                svg.style.cssText = `
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          transform: rotate(-90deg);
+          pointer-events: none;
+        `;
+
+                this.progressCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                this.progressCircle.setAttribute('cx', '50%');
+                this.progressCircle.setAttribute('cy', '50%');
+                this.progressCircle.setAttribute('r', '45%');
+                this.progressCircle.setAttribute('fill', 'none');
+                this.progressCircle.setAttribute('stroke-width', '3');
+                this.progressCircle.style.transition = 'stroke-dasharray 0.05s linear';
+
+                svg.appendChild(this.progressCircle);
+                this.element.appendChild(svg);
+
+                const content = document.createElement('div');
+                content.style.cssText = `
+          position: relative;
+          z-index: 10;
+          text-align: center;
+          color: #ffffff;
+          font-size: 1.3rem;
+          font-weight: 300;
+          letter-spacing: 0.05em;
+          pointer-events: none;
+        `;
+                content.innerHTML = `
+          ${this.options.label}
+          <small style="display: block; font-size: 0.8rem; opacity: 0.7; margin-top: 0.5rem;">
+            ${this.options.sublabel}
+          </small>
+        `;
+
+                this.element.appendChild(content);
+                this.attachEvents();
+                this.updateStyle();
+            }
+
+            attachEvents() {
+                this.element.addEventListener('mousedown', (e) => this.start(e));
+                this.element.addEventListener('mouseup', () => this.end());
+                this.element.addEventListener('mouseleave', () => this.end());
+
+                this.element.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    this.start(e);
+                }, { passive: false });
+
+                this.element.addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    this.end();
+                }, { passive: false });
+
+                this.element.addEventListener('touchcancel', () => this.end());
+            }
+
+            start(e) {
+                this.startTime = Date.now();
+                this.isActive = true;
+                this.element.style.transform = 'scale(1.1)';
+                this.animate();
+                this.createRipple(e);
+            }
+
+            animate() {
+                if (!this.isActive) return;
+
+                const elapsed = Date.now() - this.startTime;
+                this.commitment = Math.min((elapsed / this.options.activationTime) * 100, 100);
+
+                this.updateStyle();
+
+                if (this.commitment >= 100) {
+                    this.activate();
+                    return;
+                }
+
+                this.animationFrame = requestAnimationFrame(() => this.animate());
+            }
+
+            end() {
+                this.isActive = false;
+                this.commitment = 0;
+                this.startTime = null;
+                this.element.style.transform = 'scale(1)';
+                this.updateStyle();
+
+                if (this.animationFrame) {
+                    cancelAnimationFrame(this.animationFrame);
+                }
+            }
+
+            activate() {
+                if (this.options.onActivate) {
+                    this.options.onActivate();
+                }
+
+                for (let i = 0; i < 6; i++) {
+                    setTimeout(() => {
+                        const angle = (i / 6) * 360;
+                        const ripple = document.createElement('div');
+                        ripple.style.cssText = `
+              position: absolute;
+              left: 50%;
+              top: 50%;
+              width: 80px;
+              height: 80px;
+              border-radius: 50%;
+              pointer-events: none;
+              background: radial-gradient(circle, ${this.options.color}70, transparent);
+              transform: translate(-50%, -50%) rotate(${angle}deg) translateY(-40px);
+              animation: flowRipple 0.6s ease-out;
+            `;
+
+                        this.element.appendChild(ripple);
+                        setTimeout(() => ripple.remove(), 600);
+                    }, i * 50);
+                }
+
+                this.end();
+            }
+
+            createRipple(e) {
+                const rect = this.element.getBoundingClientRect();
+                let x, y;
+
+                if (e.touches && e.touches[0]) {
+                    x = ((e.touches[0].clientX - rect.left) / rect.width) * 100;
+                    y = ((e.touches[0].clientY - rect.top) / rect.height) * 100;
+                } else {
+                    x = ((e.clientX - rect.left) / rect.width) * 100;
+                    y = ((e.clientY - rect.top) / rect.height) * 100;
+                }
+
+                const ripple = document.createElement('div');
+                ripple.style.cssText = `
+          position: absolute;
+          left: ${x}%;
+          top: ${y}%;
+          width: 30px;
+          height: 30px;
+          border-radius: 50%;
+          pointer-events: none;
+          background: radial-gradient(circle, ${this.options.color}80, transparent);
+          animation: flowRipple 0.6s ease-out;
+        `;
+
+                this.element.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 600);
+            }
+
+            updateStyle() {
+                const glow = (this.commitment / 100) * 25;
+                const opacity = 0.5 + (this.commitment / 100) * 0.5;
+
+                this.element.style.background = `radial-gradient(circle, ${this.options.color}50, ${this.options.color}20)`;
+                this.element.style.border = `2px solid ${this.options.color}${Math.round(opacity * 255).toString(16).padStart(2, '0')}`;
+                this.element.style.boxShadow = `
+          0 0 ${glow}px ${this.options.color}90,
+          inset 0 0 ${glow * 0.5}px ${this.options.color}50
+        `;
+
+                const radius = this.options.size * 0.45;
+                const circumference = 2 * Math.PI * radius;
+                const dashArray = `${(this.commitment / 100) * circumference}, ${circumference}`;
+                this.progressCircle.style.strokeDasharray = dashArray;
+                this.progressCircle.style.stroke = this.options.color;
+                this.progressCircle.style.filter = `drop-shadow(0 0 ${glow * 0.5}px ${this.options.color})`;
+            }
+
+            mount(target) {
+                if (typeof target === 'string') {
+                    target = document.querySelector(target);
+                }
+                target.appendChild(this.element);
+                return this;
+            }
+        }
+
+        class Pool {
+            constructor(options = {}) {
+                this.options = {
+                    color: '#6366f1',
+                    content: '',
+                    onDrain: null,
+                    ...options
+                };
+
+                this.element = null;
+                this.isActive = false;
+                this.create();
+            }
+
+            create() {
+                this.element = document.createElement('div');
+                this.element.className = 'flow-pool';
+                this.element.style.cssText = `
+          position: fixed;
+          inset: 0;
+          background: radial-gradient(circle at center, rgba(10, 14, 39, 0.95), rgba(0, 0, 0, 0.9));
+          backdrop-filter: blur(20px);
+          display: none;
+          align-items: center;
+          justify-content: center;
+          z-index: 1000;
+          animation: flowPoolRise 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        `;
+
+                const surface = document.createElement('div');
+                surface.className = 'flow-pool-surface';
+                surface.style.cssText = `
+          position: relative;
+          max-width: 500px;
+          width: 90%;
+          padding: 3rem;
+          background: linear-gradient(135deg, 
+            ${this.options.color}26 0%, 
+            ${this.options.color}1a 50%, 
+            ${this.options.color}26 100%);
+          border: 1px solid ${this.options.color}4d;
+          border-radius: 32px;
+          color: #ffffff;
+          animation: flowRippleIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+          box-shadow: 
+            0 0 40px ${this.options.color}33,
+            inset 0 0 30px ${this.options.color}1a;
+        `;
+
+                const contentDiv = document.createElement('div');
+                contentDiv.className = 'flow-pool-content';
+                contentDiv.innerHTML = this.options.content;
+
+                surface.appendChild(contentDiv);
+
+                const drainBtn = document.createElement('button');
+                drainBtn.innerHTML = '<span>Let it Drain</span>';
+                drainBtn.style.cssText = `
+          width: 100%;
+          height: 60px;
+          border-radius: 16px;
+          background: ${this.options.color}26;
+          border: 1px solid ${this.options.color}4d;
+          color: #ffffff;
+          font-family: inherit;
+          font-size: 1.1rem;
+          cursor: pointer;
+          touch-action: manipulation;
+          -webkit-tap-highlight-color: transparent;
+          margin-top: 2rem;
+        `;
+
+                drainBtn.addEventListener('click', () => this.drain());
+                surface.appendChild(drainBtn);
+
+                this.element.appendChild(surface);
+
+                this.element.addEventListener('click', (e) => {
+                    if (e.target === this.element) {
+                        this.drain();
+                    }
+                });
+            }
+
+            enter() {
+                this.isActive = true;
+                this.element.style.display = 'flex';
+                return this;
+            }
+
+            drain() {
+                this.isActive = false;
+                this.element.style.display = 'none';
+
+                if (this.options.onDrain) {
+                    this.options.onDrain();
+                }
+
+                return this;
+            }
+
+            mount(target) {
+                if (typeof target === 'string') {
+                    target = document.querySelector(target);
+                }
+                target.appendChild(this.element);
+                return this;
+            }
+        }
+
+        // Demo code
+        let count = 0;
+
+        const infoPool = new Pool({
+            color: '#f59e0b',
+            content: `
+        <h2>Info Pool</h2>
+        <p>
+          This pool was created as a separate instance and connected to an eddy.
+          Each component is completely independent.
+        </p>
+        <p>
+          You can create as many eddies and pools as you need, each with their
+          own colors, sizes, and behaviors.
+        </p>
+      `
+        });
+        infoPool.mount('body');
+
+        const eddy1 = new Eddy({
+            color: '#10b981',
+            size: 200,
+            label: 'Count Up',
+            sublabel: 'Instance 1',
+            onActivate: () => {
+                count++;
+                document.getElementById('counter').textContent = count;
+            }
+        });
+
+        const eddy2 = new Eddy({
+            color: '#6366f1',
+            size: 200,
+            label: 'Alert',
+            sublabel: 'Instance 2',
+            onActivate: () => {
+                alert('Eddy 2 activated! 🌊');
+            }
+        });
+
+        const eddy3 = new Eddy({
+            color: '#f59e0b',
+            size: 200,
+            label: 'Info Pool',
+            sublabel: 'Instance 3',
+            onActivate: () => {
+                infoPool.enter();
+            }
+        });
+
+        eddy1.mount('#eddyContainer');
+        eddy2.mount('#eddyContainer');
+        eddy3.mount('#eddyContainer');
+    </script>
+</body>
+
+</html>

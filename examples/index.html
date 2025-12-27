@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Eddystrap - Bundled Demo</title>
+
+  <!-- Eddystrap CSS -->
+  <link rel="stylesheet" href="../dist/style.css">
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Instrument Serif', Georgia, serif;
+      background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0f1419 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .header {
+      position: fixed;
+      top: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      color: #ffffff;
+    }
+
+    .header h1 {
+      font-size: 2.5rem;
+      font-weight: 300;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header p {
+      font-size: 0.9rem;
+      opacity: 0.6;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+      align-items: center;
+      margin-top: 6rem;
+    }
+
+    .counter-display {
+      background: rgba(10, 14, 39, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 1.5rem 2.5rem;
+      backdrop-filter: blur(10px);
+      color: #ffffff;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .counter-label {
+      font-size: 0.9rem;
+      opacity: 0.6;
+      margin-bottom: 0.5rem;
+    }
+
+    .counter-value {
+      font-size: 3rem;
+      font-weight: 300;
+    }
+
+    .instructions {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    .badge {
+      background: rgba(99, 102, 241, 0.2);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      padding: 0.25rem 0.75rem;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      color: #a5b4fc;
+      margin-left: 1rem;
+    }
+
+    @media (max-width: 600px) {
+      .header h1 {
+        font-size: 1.8rem;
+      }
+
+      .container {
+        gap: 2rem;
+        margin-top: 8rem;
+      }
+
+      .counter-value {
+        font-size: 2.5rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="header">
+    <h1>Eddystrap <span class="badge">UMD Build</span></h1>
+    <p>Using the bundled version from dist/</p>
+  </div>
+
+  <div class="container">
+    <div class="counter-display">
+      <div class="counter-label">Activation Count</div>
+      <div class="counter-value" id="counter">0</div>
+    </div>
+
+    <div id="eddyContainer"></div>
+  </div>
+
+  <div class="instructions">
+    Three independent eddies • Press & hold to activate
+  </div>
+
+  <!-- Eddystrap UMD Bundle -->
+  <script src="../dist/eddystrap.umd.js"></script>
+
+  <script>
+    // Using the UMD global Eddystrap
+    const { Eddy, Pool } = Eddystrap;
+
+    let count = 0;
+
+    const infoPool = new Pool({
+      color: '#f59e0b',
+      content: `
+        <h2>About Eddystrap</h2>
+        <p>
+          This demo uses the UMD bundle built with Vite. The library is loaded
+          from <code>dist/eddystrap.umd.js</code> and available as a global <code>Eddystrap</code> object.
+        </p>
+        <p>
+          Each Eddy and Pool is a separate instance with its own state, color,
+          and behavior. No framework dependencies - just vanilla JavaScript!
+        </p>
+        <p style="font-size: 0.9rem; opacity: 0.7; margin-top: 1rem;">
+          Try the standalone version at <code>examples/standalone.html</code> for
+          a version with everything inlined.
+        </p>
+      `
+    });
+    infoPool.mount('body');
+
+    const eddy1 = new Eddy({
+      color: '#10b981',
+      size: 200,
+      label: 'Count Up',
+      sublabel: 'Press & hold',
+      activationTime: 500,
+      onActivate: () => {
+        count++;
+        document.getElementById('counter').textContent = count;
+      }
+    });
+
+    const eddy2 = new Eddy({
+      color: '#6366f1',
+      size: 200,
+      label: 'Alert',
+      sublabel: 'Press & hold',
+      activationTime: 500,
+      onActivate: () => {
+        alert('Second Eddy activated! 🌊');
+      }
+    });
+
+    const eddy3 = new Eddy({
+      color: '#f59e0b',
+      size: 200,
+      label: 'Learn More',
+      sublabel: 'Press & hold',
+      activationTime: 500,
+      onActivate: () => {
+        infoPool.enter();
+      }
+    });
+
+    eddy1.mount('#eddyContainer');
+    eddy2.mount('#eddyContainer');
+    eddy3.mount('#eddyContainer');
+  </script>
+</body>
+
+</html>

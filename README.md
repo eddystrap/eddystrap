@@ -6,6 +6,12 @@
 [![Vite](https://img.shields.io/badge/Vite-5.0-646CFF.svg)](https://vitejs.dev/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+## Documentation
+
+📚 **[View Full Documentation](docs/pages/landing.html)**
+
+Interactive demos and complete component reference available in the documentation pages.
+
 ## Philosophy
 
 Traditional UIs are built on **clicks** - binary, instant decisions. Eddystrap is different.
@@ -14,42 +20,6 @@ Traditional UIs are built on **clicks** - binary, instant decisions. Eddystrap i
 - **Natural metaphors** - "Enter a pool" not "open modal". "Drain" not "close".
 - **Kinetic feedback** - Ripples, momentum, visual flow. UI that feels alive.
 - **No traditional buttons** - Everything flows. Nothing snaps.
-
-## Components
-
-### Eddy
-
-A circular interactive component that activates through **press-and-hold**. The longer you press, the more "commitment" builds until activation (default 500ms).
-
-```typescript
-import { Eddy } from 'eddystrap';
-import 'eddystrap/styles.css';
-
-const eddy = new Eddy({
-  color: '#6366f1',
-  label: 'Confirm',
-  onActivate: () => console.log('Action committed!')
-});
-
-eddy.mount('#app');
-```
-
-### Pool
-
-A modal alternative that uses natural language. You "enter" a pool of information, then let it "drain" when done.
-
-```typescript
-import { Pool } from 'eddystrap';
-
-const pool = new Pool({
-  color: '#f59e0b',
-  content: '<h2>Welcome</h2><p>You\'ve entered the pool.</p>',
-  onDrain: () => console.log('Pool drained')
-});
-
-pool.mount('body');
-pool.enter(); // Show
-```
 
 ## Features
 
@@ -122,46 +92,22 @@ eddy.mount('#app');
 </script>
 ```
 
-## API
-
-### Eddy
+## Quick Example
 
 ```typescript
-interface EddyOptions {
-  color?: string;              // Hex color (default: '#6366f1')
-  size?: number;               // Size in px (default: 200)
-  label?: string;              // Main text (default: 'Eddy')
-  sublabel?: string;           // Subtitle (default: 'Touch & hold')
-  activationTime?: number;     // Time to activate in ms (default: 500)
-  onActivate?: () => void;     // Callback on activation
-}
+import { Eddy } from 'eddystrap';
+import 'eddystrap/styles.css';
 
-// Methods
-eddy.mount(target: string | HTMLElement): this
-eddy.destroy(): this
+const eddy = new Eddy({
+  color: '#6366f1',
+  label: 'Confirm',
+  onActivate: () => console.log('Action committed!')
+});
+
+eddy.mount('#app');
 ```
 
-### Pool
-
-```typescript
-interface PoolOptions {
-  color?: string;              // Hex color (default: '#6366f1')
-  content?: string;            // HTML content string
-  onDrain?: () => void;        // Callback when closed
-}
-
-// Methods
-pool.mount(target: string | HTMLElement): this
-pool.enter(): this              // Show the pool
-pool.drain(): this              // Hide the pool
-pool.destroy(): this
-```
-
-## Examples
-
-Check the `examples/` directory:
-- `standalone.html` - No build required, works in any browser
-- `index.html` - Using the UMD bundle
+For full API documentation and interactive examples, see the [documentation pages](docs/pages/landing.html).
 
 ## Development
 
@@ -202,22 +148,6 @@ eddystrap/
 └── index.html            # Dev server entry
 ```
 
-## Design Decisions
-
-1. **Press-and-hold over hover** - More deliberate, works better on mobile
-2. **500ms default** - Sweet spot between too fast (accidental) and too slow (annoying)
-3. **Circular progress** - Visual commitment building
-4. **Natural metaphors** - Pool/drain feels more organic than modal/close
-5. **Ripple effects** - Emanate from touch point for kinetic feedback
-
-## Future Components
-
-Following the natural metaphor:
-
-- **Stream** - Flowing content feeds
-- **Current** - Directional navigation
-- **Tide** - Periodic state changes
-- **Whirlpool** - Multi-step commitment flows
 
 ## Browser Support
 

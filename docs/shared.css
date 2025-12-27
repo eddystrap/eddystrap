@@ -64,6 +64,146 @@ nav .nav-links a.active {
   color: #ffffff;
 }
 
+/* Ripple Navigation Effects - Scoped to Eddystrap nav only */
+.eddy-nav-ripple li {
+  position: relative;
+}
+
+.eddy-nav-ripple a {
+  position: relative;
+  padding: 0.75rem 1.25rem;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.eddy-ripple-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.eddy-ripple {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  pointer-events: none;
+  animation: eddy-ripple-expand 0.6s ease-out;
+}
+
+.eddy-ripple-subtle {
+  animation: eddy-ripple-expand-subtle 0.8s ease-out;
+}
+
+@keyframes eddy-ripple-expand {
+  to {
+    transform: translate(-50%, -50%) scale(20);
+    opacity: 0;
+  }
+}
+
+@keyframes eddy-ripple-expand-subtle {
+  to {
+    transform: translate(-50%, -50%) scale(15);
+    opacity: 0;
+  }
+}
+
+.eddy-ambient-hint {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.eddy-nav-ripple a:hover .eddy-ambient-hint {
+  opacity: 1;
+}
+
+/* Preview Bubble */
+.eddy-preview-bubble {
+  position: fixed;
+  width: 280px;
+  background: rgba(10, 14, 39, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  transform: translateX(-50%) translateY(-10px) scale(0.9);
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  z-index: 10000;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.eddy-preview-visible {
+  transform: translateX(-50%) translateY(0) scale(1);
+  opacity: 1;
+}
+
+.eddy-preview-bubble::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+  pointer-events: none;
+}
+
+.eddy-preview-header {
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+}
+
+.eddy-preview-icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.eddy-preview-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.eddy-preview-body {
+  padding: 1.25rem 1.5rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.eddy-preview-body p {
+  margin: 0;
+}
+
+.eddy-preview-footer {
+  padding: 0.75rem 1.5rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-align: center;
+}
+
 /* Common sections */
 .section {
   padding: 6rem 2rem;

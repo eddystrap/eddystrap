@@ -91,8 +91,6 @@ export class Wave {
     }
 
     // Wave canvas (background animation)
-    this.waveCanvas.width = 400;
-    this.waveCanvas.height = 60;
     this.waveCanvas.style.cssText = `
       position: absolute;
       top: 50%;
@@ -104,6 +102,13 @@ export class Wave {
       opacity: 0.3;
     `;
     this.element.appendChild(this.waveCanvas);
+
+    // Set canvas size after adding to DOM
+    setTimeout(() => {
+      const rect = this.waveCanvas.getBoundingClientRect();
+      this.waveCanvas.width = rect.width;
+      this.waveCanvas.height = 60;
+    }, 0);
 
     // Track
     this.track.style.cssText = `

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Components - Eddystrap</title>
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <link rel="stylesheet" href="../shared.css">
+  <style>
+    .page-header {
+      padding-top: 8rem;
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .components-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .component-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 2rem;
+      transition: all 0.3s;
+    }
+
+    .component-card:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-4px);
+    }
+
+    .component-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .component-name {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .component-desc {
+      opacity: 0.7;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .component-status {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .status-stable {
+      background: rgba(16, 185, 129, 0.2);
+      color: #10b981;
+    }
+
+    .status-experimental {
+      background: rgba(245, 158, 11, 0.2);
+      color: #f59e0b;
+    }
+
+    .code-block {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-top: 1rem;
+      overflow-x: auto;
+    }
+
+    .code-block code {
+      font-family: 'Monaco', 'Courier New', monospace;
+      font-size: 0.85rem;
+      color: #a5b4fc;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-content">
+      <a href="../index.html" class="logo">Eddystrap</a>
+      <ul class="nav-links">
+        <li><a href="landing.html">Home</a></li>
+        <li><a href="components.html" class="active">Components</a></li>
+        <li><a href="demo.html">Demo</a></li>
+        <li><a href="https://github.com/eddystrap/eddystrap">GitHub</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <h1 class="section-title">Components</h1>
+    <p style="opacity: 0.7; max-width: 600px; margin: 0 auto;">
+      Natural, kinetic components that feel alive. No traditional buttons.
+    </p>
+  </div>
+
+  <div class="section">
+    <div class="components-grid">
+
+      <!-- Eddy -->
+      <div class="component-card">
+        <div class="component-icon">🌀</div>
+        <h3 class="component-name">Eddy</h3>
+        <span class="component-status status-stable">Stable</span>
+        <p class="component-desc">
+          Press-and-hold interactive component. Commitment builds over time through kinetic feedback.
+        </p>
+        <div class="code-block">
+          <code>new Eddy({ label: 'Confirm', onActivate: () => {} })</code>
+        </div>
+      </div>
+
+      <!-- Pool -->
+      <div class="component-card">
+        <div class="component-icon">🌊</div>
+        <h3 class="component-name">Pool</h3>
+        <span class="component-status status-stable">Stable</span>
+        <p class="component-desc">
+          Natural modal alternative using flow metaphors. "Enter" the pool, "drain" to close.
+        </p>
+        <div class="code-block">
+          <code>new Pool({ content: '...', color: '#6366f1' })</code>
+        </div>
+      </div>
+
+      <!-- Stream -->
+      <div class="component-card">
+        <div class="component-icon">💧</div>
+        <h3 class="component-name">Stream</h3>
+        <span class="component-status status-experimental">Experimental</span>
+        <p class="component-desc">
+          Text input with flowing ripples. Words flow in naturally as you type.
+        </p>
+        <div class="code-block">
+          <code>new Stream({ placeholder: 'Type...' })</code>
+        </div>
+      </div>
+
+      <!-- Wave -->
+      <div class="component-card">
+        <div class="component-icon">🌊</div>
+        <h3 class="component-name">Wave</h3>
+        <span class="component-status status-experimental">Experimental</span>
+        <p class="component-desc">
+          Range slider with wave visualization. Amplitude represents magnitude.
+        </p>
+        <div class="code-block">
+          <code>new Wave({ min: 0, max: 100, value: 50 })</code>
+        </div>
+      </div>
+
+      <!-- Tide -->
+      <div class="component-card">
+        <div class="component-icon">🌙</div>
+        <h3 class="component-name">Tide</h3>
+        <span class="component-status status-experimental">Experimental</span>
+        <p class="component-desc">
+          Toggle using ebb and flow. Tide rises when on, recedes when off.
+        </p>
+        <div class="code-block">
+          <code>new Tide({ label: 'Enable', checked: false })</code>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="section" style="text-align: center;">
+    <h2 class="section-title">Try Them Out</h2>
+    <p style="opacity: 0.7; margin-bottom: 2rem;">
+      See all components in action on the demo page.
+    </p>
+    <a href="demo.html" class="btn btn-primary">Open Demo</a>
+  </div>
+
+  <footer>
+    Built with time as input. No clicks required.<br>
+    MIT © <a href="https://github.com/eddystrap">Eddystrap</a>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eddystrap - Natural Kinetic UI</title>
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <link rel="stylesheet" href="../shared.css">
+  <style>
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      padding-top: 6rem;
+    }
+
+    .hero-title {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: clamp(3rem, 10vw, 7rem);
+      font-weight: 300;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-align: center;
+      line-height: 1.1;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(1.2rem, 3vw, 1.8rem);
+      font-weight: 300;
+      opacity: 0.8;
+      margin-bottom: 3rem;
+      text-align: center;
+      max-width: 600px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn {
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 500;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: white;
+      border: none;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+    }
+
+    .philosophy {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+      line-height: 1.8;
+      opacity: 0.9;
+    }
+
+    .philosophy p {
+      margin-bottom: 1.5rem;
+    }
+
+    .philosophy strong {
+      color: #8b5cf6;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-content">
+      <a href="../index.html" class="logo">Eddystrap</a>
+      <ul class="nav-links">
+        <li><a href="landing.html" class="active">Home</a></li>
+        <li><a href="components.html">Components</a></li>
+        <li><a href="demo.html">Demo</a></li>
+        <li><a href="https://github.com/eddystrap/eddystrap">GitHub</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="hero">
+    <h1 class="hero-title">Eddystrap</h1>
+    <p class="hero-subtitle">Natural kinetic UI components for the web. Time as input, not clicks.</p>
+
+    <div class="hero-buttons">
+      <a href="demo.html" class="btn btn-primary">Try Demo</a>
+      <a href="components.html" class="btn btn-secondary">View Components</a>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">Philosophy</h2>
+    <div class="philosophy">
+      <p>
+        Traditional UIs are built on <strong>clicks</strong> - binary, instant decisions. Eddystrap is different.
+      </p>
+      <p>
+        We use <strong>time as input</strong>. Holding builds commitment. Duration matters.
+        Everything flows with <strong>kinetic feedback</strong> and <strong>natural metaphors</strong>.
+      </p>
+      <p>
+        No traditional buttons. Just natural interaction.
+      </p>
+    </div>
+  </div>
+
+  <footer>
+    Built with time as input. No clicks required.<br>
+    MIT © <a href="https://github.com/eddystrap">Eddystrap</a>
+  </footer>
+</body>
+</html>

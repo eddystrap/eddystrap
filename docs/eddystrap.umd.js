@@ -151,7 +151,7 @@
         opacity: 0.8;
         margin-bottom: 0.5rem;
         color: #ffffff;
-      `,this.element.appendChild(t)}this.waveCanvas.width=400,this.waveCanvas.height=60,this.waveCanvas.style.cssText=`
+      `,this.element.appendChild(t)}this.waveCanvas.style.cssText=`
       position: absolute;
       top: 50%;
       left: 0;
@@ -160,7 +160,7 @@
       transform: translateY(-50%);
       pointer-events: none;
       opacity: 0.3;
-    `,this.element.appendChild(this.waveCanvas),this.track.style.cssText=`
+    `,this.element.appendChild(this.waveCanvas),setTimeout(()=>{const t=this.waveCanvas.getBoundingClientRect();this.waveCanvas.width=t.width,this.waveCanvas.height=60},0),this.track.style.cssText=`
       position: relative;
       width: 100%;
       height: 8px;

@@ -7,16 +7,19 @@ export interface TideOptions {
 }
 
 /**
- * Tide - A natural toggle/switch component
+ * Tide - A natural toggle with inertia
  *
- * Unlike traditional toggles, Tide uses ebb and flow metaphors.
- * The UI feels like a tide coming in (on) or going out (off).
+ * Unlike traditional toggles, Tide responds instantly to clicks but
+ * the visual transition has momentum - like a real tide that doesn't
+ * change instantly. Click works immediately but the tide rises/falls
+ * with natural timing.
  *
  * Philosophy:
- * - States flow like tides
- * - Smooth, natural transitions
- * - Visual flow represents state
- * - No harsh switches
+ * - Click works instantly (practical)
+ * - Visual transition has inertia (~800ms)
+ * - Tide rises and falls gradually
+ * - Feels weighted and natural
+ * - Not annoying, just different
  *
  * @example
  * ```ts
@@ -72,7 +75,7 @@ export class Tide {
       border: 2px solid ${this.options.color}40;
       border-radius: ${this.options.size / 2}px;
       overflow: hidden;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     `;
 
     // Orb (the moon/sun that controls the tide)
@@ -85,7 +88,7 @@ export class Tide {
       border-radius: 50%;
       transform: translateY(-50%);
       box-shadow: 0 0 15px ${this.options.color}80;
-      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: left 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
       z-index: 10;
     `;
 
@@ -132,25 +135,26 @@ export class Tide {
   private createTideWaves(): void {
     this.clearWaves();
 
-    // Create 3 wave layers
-    for (let i = 0; i < 3; i++) {
+    // Create 4 wave layers with staggered timing for inertia effect
+    for (let i = 0; i < 4; i++) {
       const wave = document.createElement('div');
+      const delay = i * 0.1; // Stagger the waves
       wave.style.cssText = `
         position: absolute;
         bottom: 0;
         left: 0;
         right: 0;
-        height: ${30 + i * 10}%;
-        background: ${this.options.color}${(20 - i * 5).toString(16).padStart(2, '0')};
-        opacity: ${0.5 - i * 0.1};
-        animation: tideRise 1s ease-out forwards;
+        height: ${25 + i * 12}%;
+        background: ${this.options.color}${(20 - i * 4).toString(16).padStart(2, '0')};
+        opacity: ${0.6 - i * 0.12};
+        animation: tideRise 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) ${delay}s forwards;
         border-radius: 50% 50% 0 0;
       `;
       this.container.insertBefore(wave, this.orb);
       this.waves.push(wave);
     }
 
-    // Add tide rise animation
+    // Add tide rise animation with momentum easing
     if (!document.getElementById('tide-rise-keyframes')) {
       const style = document.createElement('style');
       style.id = 'tide-rise-keyframes';
@@ -158,17 +162,21 @@ export class Tide {
         @keyframes tideRise {
           from {
             transform: translateY(100%);
+            opacity: 0;
           }
           to {
             transform: translateY(0);
+            opacity: 1;
           }
         }
         @keyframes tideFall {
           from {
             transform: translateY(0);
+            opacity: 1;
           }
           to {
             transform: translateY(100%);
+            opacity: 0;
           }
         }
       `;
@@ -177,9 +185,10 @@ export class Tide {
   }
 
   private clearWaves(): void {
-    this.waves.forEach((wave) => {
-      wave.style.animation = 'tideFall 0.6s ease-out forwards';
-      setTimeout(() => wave.remove(), 600);
+    this.waves.forEach((wave, i) => {
+      const delay = i * 0.08; // Stagger the fall slightly
+      wave.style.animation = `tideFall 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) ${delay}s forwards`;
+      setTimeout(() => wave.remove(), 800 + delay * 1000);
     });
     this.waves = [];
   }

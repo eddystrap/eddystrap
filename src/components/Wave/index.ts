@@ -3,22 +3,25 @@ export interface WaveOptions {
   min?: number;
   max?: number;
   value?: number;
-  step?: number;
   label?: string;
   onChange?: ((value: number) => void) | null;
+  growthRate?: number; // How fast the wave grows (value/second)
+  decayRate?: number; // How fast the wave decays when not pressed (value/second)
 }
 
 /**
- * Wave - A natural slider/range component
+ * Wave - A natural value control using wave physics
  *
- * Unlike traditional sliders, Wave uses flowing wave motion to represent values.
- * The wave amplitude changes based on the value, creating organic feedback.
+ * Unlike sliders, Wave responds to press duration. Press and hold to make
+ * the wave grow. Release when it reaches the desired height. The wave
+ * naturally decays slowly over time if you don't interact.
  *
  * Philosophy:
- * - Values flow like waves
- * - Visual amplitude represents magnitude
- * - Natural, smooth transitions
- * - No harsh linear bars
+ * - Press duration builds the wave
+ * - Waves grow and decay naturally
+ * - Visual feedback through wave amplitude
+ * - No dragging, just pressing
+ * - Time is the input
  *
  * @example
  * ```ts
@@ -35,13 +38,13 @@ export interface WaveOptions {
 export class Wave {
   private options: Required<WaveOptions>;
   private element: HTMLDivElement;
-  private track: HTMLDivElement;
-  private handle: HTMLDivElement;
   private waveCanvas: HTMLCanvasElement;
   private valueDisplay: HTMLDivElement;
-  private isDragging: boolean = false;
+  private pressArea: HTMLDivElement;
+  private isPressed: boolean = false;
   private animationFrame: number | null = null;
   private phase: number = 0;
+  private lastUpdate: number = Date.now();
 
   constructor(options: WaveOptions = {}) {
     this.options = {
@@ -49,9 +52,10 @@ export class Wave {
       min: 0,
       max: 100,
       value: 50,
-      step: 1,
       label: 'Wave',
       onChange: null,
+      growthRate: 40, // Grows from 0 to 100 in 2.5 seconds
+      decayRate: 5, // Decays slowly when not pressed
       ...options,
     };
 
@@ -59,10 +63,9 @@ export class Wave {
     this.options.value = Math.max(this.options.min, Math.min(this.options.max, this.options.value));
 
     this.element = document.createElement('div');
-    this.track = document.createElement('div');
-    this.handle = document.createElement('div');
     this.waveCanvas = document.createElement('canvas');
     this.valueDisplay = document.createElement('div');
+    this.pressArea = document.createElement('div');
 
     this.create();
     this.startAnimation();
@@ -75,6 +78,7 @@ export class Wave {
       width: 100%;
       max-width: 400px;
       padding: 1rem 0;
+      user-select: none;
     `;
 
     // Label
@@ -84,150 +88,146 @@ export class Wave {
       label.style.cssText = `
         font-size: 0.9rem;
         opacity: 0.8;
-        margin-bottom: 0.5rem;
+        margin-bottom: 1rem;
         color: #ffffff;
+        text-align: center;
       `;
       this.element.appendChild(label);
     }
 
-    // Wave canvas (background animation)
-    this.waveCanvas.style.cssText = `
-      position: absolute;
-      top: 50%;
-      left: 0;
-      width: 100%;
-      height: 60px;
-      transform: translateY(-50%);
-      pointer-events: none;
-      opacity: 0.3;
-    `;
-    this.element.appendChild(this.waveCanvas);
-
-    // Set canvas size after adding to DOM
-    setTimeout(() => {
-      const rect = this.waveCanvas.getBoundingClientRect();
-      this.waveCanvas.width = rect.width;
-      this.waveCanvas.height = 60;
-    }, 0);
-
-    // Track
-    this.track.style.cssText = `
+    // Wave canvas container
+    const canvasContainer = document.createElement('div');
+    canvasContainer.style.cssText = `
       position: relative;
       width: 100%;
-      height: 8px;
-      background: ${this.options.color}20;
-      border-radius: 4px;
-      cursor: pointer;
-      margin: 1rem 0;
+      height: 120px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 2px solid ${this.options.color}30;
     `;
 
-    // Handle
-    this.handle.style.cssText = `
+    // Wave canvas
+    this.waveCanvas.style.cssText = `
       position: absolute;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      width: 24px;
-      height: 24px;
-      background: radial-gradient(circle, ${this.options.color}, ${this.options.color}cc);
-      border: 2px solid ${this.options.color};
-      border-radius: 50%;
-      cursor: grab;
-      box-shadow: 0 0 10px ${this.options.color}80;
-      transition: all 0.2s ease;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
     `;
+    canvasContainer.appendChild(this.waveCanvas);
 
-    this.track.appendChild(this.handle);
-    this.element.appendChild(this.track);
+    // Press area (overlay for interaction)
+    this.pressArea.style.cssText = `
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+      z-index: 10;
+    `;
+    canvasContainer.appendChild(this.pressArea);
+
+    // Instruction text
+    const instruction = document.createElement('div');
+    instruction.textContent = 'Press & hold to grow • Release to set';
+    instruction.style.cssText = `
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.75rem;
+      opacity: 0.5;
+      color: #ffffff;
+      pointer-events: none;
+      z-index: 5;
+    `;
+    canvasContainer.appendChild(instruction);
+
+    this.element.appendChild(canvasContainer);
 
     // Value display
     this.valueDisplay.style.cssText = `
       text-align: center;
-      font-size: 1.2rem;
-      font-weight: 500;
+      font-size: 1.5rem;
+      font-weight: 600;
       color: ${this.options.color};
-      margin-top: 0.5rem;
+      margin-top: 1rem;
     `;
     this.element.appendChild(this.valueDisplay);
 
-    this.updatePosition();
+    // Set canvas size
+    setTimeout(() => {
+      const rect = this.waveCanvas.getBoundingClientRect();
+      this.waveCanvas.width = rect.width;
+      this.waveCanvas.height = rect.height;
+    }, 0);
+
+    this.updateDisplay();
     this.attachEvents();
   }
 
   private attachEvents(): void {
-    const handleMove = (clientX: number) => {
-      const rect = this.track.getBoundingClientRect();
-      const percent = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
-      const range = this.options.max - this.options.min;
-      let value = this.options.min + percent * range;
-
-      // Snap to step
-      value = Math.round(value / this.options.step) * this.options.step;
-      this.setValue(value);
-    };
-
     // Mouse events
-    this.handle.addEventListener('mousedown', () => {
-      this.isDragging = true;
-      this.handle.style.cursor = 'grabbing';
-      this.handle.style.transform = 'translate(-50%, -50%) scale(1.2)';
-    });
-
-    document.addEventListener('mousemove', (e) => {
-      if (this.isDragging) {
-        handleMove(e.clientX);
-      }
+    this.pressArea.addEventListener('mousedown', () => {
+      this.isPressed = true;
+      this.pressArea.style.cursor = 'grabbing';
     });
 
     document.addEventListener('mouseup', () => {
-      if (this.isDragging) {
-        this.isDragging = false;
-        this.handle.style.cursor = 'grab';
-        this.handle.style.transform = 'translate(-50%, -50%) scale(1)';
+      if (this.isPressed) {
+        this.isPressed = false;
+        this.pressArea.style.cursor = 'pointer';
       }
     });
 
     // Touch events
-    this.handle.addEventListener(
+    this.pressArea.addEventListener(
       'touchstart',
       (e) => {
         e.preventDefault();
-        this.isDragging = true;
-        this.handle.style.transform = 'translate(-50%, -50%) scale(1.2)';
+        this.isPressed = true;
       },
       { passive: false }
     );
 
-    document.addEventListener('touchmove', (e) => {
-      if (this.isDragging && e.touches[0]) {
-        handleMove(e.touches[0].clientX);
-      }
-    });
-
     document.addEventListener('touchend', () => {
-      if (this.isDragging) {
-        this.isDragging = false;
-        this.handle.style.transform = 'translate(-50%, -50%) scale(1)';
+      if (this.isPressed) {
+        this.isPressed = false;
       }
     });
-
-    // Click on track
-    this.track.addEventListener('click', (e) => {
-      if (e.target === this.track) {
-        handleMove(e.clientX);
-      }
-    });
-  }
-
-  private updatePosition(): void {
-    const percent = (this.options.value - this.options.min) / (this.options.max - this.options.min);
-    this.handle.style.left = `${percent * 100}%`;
-    this.valueDisplay.textContent = this.options.value.toString();
   }
 
   private startAnimation(): void {
     const animate = () => {
+      const now = Date.now();
+      const delta = (now - this.lastUpdate) / 1000; // Convert to seconds
+      this.lastUpdate = now;
+
+      // Update value based on press state
+      if (this.isPressed) {
+        // Grow the wave
+        const newValue = Math.min(
+          this.options.max,
+          this.options.value + this.options.growthRate * delta
+        );
+        if (newValue !== this.options.value) {
+          this.setValue(newValue);
+        }
+      } else {
+        // Decay the wave slowly
+        const newValue = Math.max(
+          this.options.min,
+          this.options.value - this.options.decayRate * delta
+        );
+        if (newValue !== this.options.value) {
+          this.setValue(newValue, false); // Don't trigger onChange on decay
+        }
+      }
+
       this.drawWave();
-      this.phase += 0.05;
+      this.phase += this.isPressed ? 0.15 : 0.05; // Faster phase when pressed
       this.animationFrame = requestAnimationFrame(animate);
     };
     animate();
@@ -245,23 +245,57 @@ export class Wave {
 
     // Calculate amplitude based on value
     const percent = (this.options.value - this.options.min) / (this.options.max - this.options.min);
-    const amplitude = 10 + percent * 20;
+    const amplitude = 5 + percent * (height * 0.4);
 
-    // Draw wave
+    // Draw multiple wave layers
+    const layers = [
+      { opacity: 0.3, offset: 0, thickness: 3 },
+      { opacity: 0.2, offset: 0.5, thickness: 2 },
+      { opacity: 0.15, offset: 1, thickness: 1.5 },
+    ];
+
+    layers.forEach((layer) => {
+      ctx.beginPath();
+      ctx.strokeStyle = this.options.color;
+      ctx.globalAlpha = layer.opacity * (this.isPressed ? 1.5 : 1);
+      ctx.lineWidth = layer.thickness;
+
+      for (let x = 0; x < width; x++) {
+        const y =
+          centerY +
+          Math.sin((x / 40 + this.phase + layer.offset) * Math.PI) * amplitude +
+          Math.sin((x / 20 + this.phase * 1.5) * Math.PI) * (amplitude * 0.3);
+
+        if (x === 0) {
+          ctx.moveTo(x, y);
+        } else {
+          ctx.lineTo(x, y);
+        }
+      }
+
+      ctx.stroke();
+    });
+
+    // Draw fill below wave
+    ctx.globalAlpha = 0.1;
+    ctx.fillStyle = this.options.color;
     ctx.beginPath();
-    ctx.strokeStyle = this.options.color;
-    ctx.lineWidth = 2;
+    ctx.moveTo(0, height);
 
     for (let x = 0; x < width; x++) {
-      const y = centerY + Math.sin((x / 50 + this.phase) * Math.PI) * amplitude;
-      if (x === 0) {
-        ctx.moveTo(x, y);
-      } else {
-        ctx.lineTo(x, y);
-      }
+      const y = centerY + Math.sin((x / 40 + this.phase) * Math.PI) * amplitude;
+      ctx.lineTo(x, y);
     }
 
-    ctx.stroke();
+    ctx.lineTo(width, height);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.globalAlpha = 1;
+  }
+
+  private updateDisplay(): void {
+    this.valueDisplay.textContent = Math.round(this.options.value).toString();
   }
 
   /**
@@ -274,11 +308,11 @@ export class Wave {
   /**
    * Set value
    */
-  public setValue(value: number): this {
+  public setValue(value: number, triggerChange: boolean = true): this {
     this.options.value = Math.max(this.options.min, Math.min(this.options.max, value));
-    this.updatePosition();
+    this.updateDisplay();
 
-    if (this.options.onChange) {
+    if (triggerChange && this.options.onChange) {
       this.options.onChange(this.options.value);
     }
 

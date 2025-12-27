@@ -97,7 +97,7 @@
       <ul class="nav-links">
         <li><a href="landing.html" class="active">Home</a></li>
         <li><a href="components.html">Components</a></li>
-        <li><a href="demo.html">Demo</a></li>
+        <li><a href="playground.html">Playground</a></li>
         <li><a href="https://github.com/eddystrap/eddystrap">GitHub</a></li>
       </ul>
     </div>
@@ -107,9 +107,9 @@
     <h1 class="hero-title">Eddystrap</h1>
     <p class="hero-subtitle">Natural kinetic UI components for the web. Time as input, not clicks.</p>
 
-    <div class="hero-buttons">
-      <a href="demo.html" class="btn btn-primary">Try Demo</a>
-      <a href="components.html" class="btn btn-secondary">View Components</a>
+    <div class="hero-buttons" style="display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap; margin-top: 3rem;">
+      <div id="playground-button"></div>
+      <div id="components-button"></div>
     </div>
   </div>
 
@@ -133,5 +133,30 @@
     Built with time as input. No clicks required.<br>
     MIT © <a href="https://github.com/eddystrap">Eddystrap</a>
   </footer>
+
+  <script src="../eddystrap.umd.js"></script>
+  <script>
+    const { Eddy } = Eddystrap;
+
+    // Playground button
+    new Eddy({
+      color: '#6366f1',
+      size: 140,
+      label: 'Try Playground',
+      sublabel: 'Hold me',
+      activationTime: 600,
+      onActivate: () => window.location.href = 'playground.html'
+    }).mount('#playground-button');
+
+    // Components button
+    new Eddy({
+      color: '#8b5cf6',
+      size: 140,
+      label: 'Components',
+      sublabel: 'Hold me',
+      activationTime: 600,
+      onActivate: () => window.location.href = 'components.html'
+    }).mount('#components-button');
+  </script>
 </body>
 </html>

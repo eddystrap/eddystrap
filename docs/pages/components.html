@@ -2,10 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Components - Eddystrap</title>
   <link rel="icon" type="image/svg+xml" href="../favicon.svg">
   <link rel="stylesheet" href="../shared.css">
+  <link rel="stylesheet" href="../style.css">
   <style>
     .page-header {
       padding-top: 8rem;
@@ -13,42 +14,31 @@
       margin-bottom: 4rem;
     }
 
-    .components-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 2rem;
-      margin-top: 3rem;
-    }
-
-    .component-card {
-      background: rgba(255, 255, 255, 0.05);
+    .component-section {
+      margin-bottom: 6rem;
+      background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 16px;
-      padding: 2rem;
-      transition: all 0.3s;
+      border-radius: 24px;
+      padding: 3rem;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
-    .component-card:hover {
-      background: rgba(255, 255, 255, 0.08);
-      border-color: rgba(255, 255, 255, 0.2);
-      transform: translateY(-4px);
+    .component-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
     }
 
     .component-icon {
       font-size: 2.5rem;
-      margin-bottom: 1rem;
     }
 
-    .component-name {
-      font-size: 1.5rem;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-    }
-
-    .component-desc {
-      opacity: 0.7;
-      line-height: 1.6;
-      margin-bottom: 1rem;
+    .component-title-group h2 {
+      font-size: 2rem;
+      margin-bottom: 0.25rem;
     }
 
     .component-status {
@@ -69,19 +59,41 @@
       color: #f59e0b;
     }
 
+    .component-desc {
+      opacity: 0.7;
+      line-height: 1.8;
+      margin-bottom: 2rem;
+    }
+
+    .demo-area {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 16px;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
     .code-block {
       background: rgba(0, 0, 0, 0.3);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
-      padding: 1rem;
-      margin-top: 1rem;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-top: 1.5rem;
       overflow-x: auto;
     }
 
     .code-block code {
       font-family: 'Monaco', 'Courier New', monospace;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       color: #a5b4fc;
+      line-height: 1.6;
+    }
+
+    .demo-output {
+      margin-top: 1.5rem;
+      padding: 1.5rem;
+      border-radius: 12px;
+      min-height: 60px;
+      transition: all 0.3s ease;
     }
   </style>
 </head>
@@ -92,7 +104,7 @@
       <ul class="nav-links">
         <li><a href="landing.html">Home</a></li>
         <li><a href="components.html" class="active">Components</a></li>
-        <li><a href="demo.html">Demo</a></li>
+        <li><a href="playground.html">Playground</a></li>
         <li><a href="https://github.com/eddystrap/eddystrap">GitHub</a></li>
       </ul>
     </div>
@@ -101,92 +113,287 @@
   <div class="page-header">
     <h1 class="section-title">Components</h1>
     <p style="opacity: 0.7; max-width: 600px; margin: 0 auto;">
-      Natural, kinetic components that feel alive. No traditional buttons.
+      Natural, kinetic components. Each one demonstrates a different approach to time-based interaction.
     </p>
   </div>
 
   <div class="section">
-    <div class="components-grid">
 
-      <!-- Eddy -->
-      <div class="component-card">
+    <!-- Eddy -->
+    <div class="component-section">
+      <div class="component-header">
         <div class="component-icon">🌀</div>
-        <h3 class="component-name">Eddy</h3>
-        <span class="component-status status-stable">Stable</span>
-        <p class="component-desc">
-          Press-and-hold interactive component. Commitment builds over time through kinetic feedback.
-        </p>
-        <div class="code-block">
-          <code>new Eddy({ label: 'Confirm', onActivate: () => {} })</code>
+        <div class="component-title-group">
+          <h2>Eddy</h2>
+          <span class="component-status status-stable">Stable</span>
         </div>
       </div>
 
-      <!-- Pool -->
-      <div class="component-card">
-        <div class="component-icon">🌊</div>
-        <h3 class="component-name">Pool</h3>
-        <span class="component-status status-stable">Stable</span>
-        <p class="component-desc">
-          Natural modal alternative using flow metaphors. "Enter" the pool, "drain" to close.
-        </p>
-        <div class="code-block">
-          <code>new Pool({ content: '...', color: '#6366f1' })</code>
+      <p class="component-desc">
+        The core component. Press and hold to build commitment. Commitment builds over time through kinetic feedback - ripples, glow, and a progress circle. Release early and nothing happens. Hold until completion and the action triggers.
+      </p>
+
+      <div class="demo-area">
+        <div style="display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap;">
+          <div id="eddy-confirm"></div>
+          <div id="eddy-delete"></div>
         </div>
+        <p style="text-align: center; opacity: 0.6; margin-top: 1.5rem; font-size: 0.9rem;">
+          ↑ Press and hold to activate
+        </p>
       </div>
 
-      <!-- Stream -->
-      <div class="component-card">
-        <div class="component-icon">💧</div>
-        <h3 class="component-name">Stream</h3>
-        <span class="component-status status-experimental">Experimental</span>
-        <p class="component-desc">
-          Text input with flowing ripples. Words flow in naturally as you type.
-        </p>
-        <div class="code-block">
-          <code>new Stream({ placeholder: 'Type...' })</code>
-        </div>
-      </div>
+      <div class="code-block">
+        <code>const eddy = new Eddy({
+  color: '#10b981',
+  label: 'Confirm',
+  sublabel: 'Press & hold',
+  activationTime: 500,
+  onActivate: () => console.log('Activated!')
+});
 
-      <!-- Wave -->
-      <div class="component-card">
-        <div class="component-icon">🌊</div>
-        <h3 class="component-name">Wave</h3>
-        <span class="component-status status-experimental">Experimental</span>
-        <p class="component-desc">
-          Range slider with wave visualization. Amplitude represents magnitude.
-        </p>
-        <div class="code-block">
-          <code>new Wave({ min: 0, max: 100, value: 50 })</code>
-        </div>
+eddy.mount('#container');</code>
       </div>
-
-      <!-- Tide -->
-      <div class="component-card">
-        <div class="component-icon">🌙</div>
-        <h3 class="component-name">Tide</h3>
-        <span class="component-status status-experimental">Experimental</span>
-        <p class="component-desc">
-          Toggle using ebb and flow. Tide rises when on, recedes when off.
-        </p>
-        <div class="code-block">
-          <code>new Tide({ label: 'Enable', checked: false })</code>
-        </div>
-      </div>
-
     </div>
-  </div>
 
-  <div class="section" style="text-align: center;">
-    <h2 class="section-title">Try Them Out</h2>
-    <p style="opacity: 0.7; margin-bottom: 2rem;">
-      See all components in action on the demo page.
-    </p>
-    <a href="demo.html" class="btn btn-primary">Open Demo</a>
+    <!-- Pool -->
+    <div class="component-section">
+      <div class="component-header">
+        <div class="component-icon">🌊</div>
+        <div class="component-title-group">
+          <h2>Pool</h2>
+          <span class="component-status status-stable">Stable</span>
+        </div>
+      </div>
+
+      <p class="component-desc">
+        A modal alternative using natural flow metaphors. Instead of "open/close", you "enter" a pool and "let it drain". The UI flows in with ripple animations rather than popping into existence.
+      </p>
+
+      <div class="demo-area">
+        <div style="text-align: center;">
+          <div id="pool-trigger"></div>
+        </div>
+      </div>
+
+      <div class="code-block">
+        <code>const pool = new Pool({
+  color: '#6366f1',
+  content: '&lt;h2&gt;Welcome&lt;/h2&gt;&lt;p&gt;Content here&lt;/p&gt;',
+  onDrain: () => console.log('Drained')
+});
+
+pool.mount('body');
+pool.enter(); // Show it</code>
+      </div>
+    </div>
+
+    <!-- Stream -->
+    <div class="component-section">
+      <div class="component-header">
+        <div class="component-icon">💧</div>
+        <div class="component-title-group">
+          <h2>Stream</h2>
+          <span class="component-status status-experimental">Experimental</span>
+        </div>
+      </div>
+
+      <p class="component-desc">
+        Text input with flowing ripple effects. As you type, ripples emanate from random positions, creating a sense of text flowing into the field. Still finding its identity beyond being a decorated input.
+      </p>
+
+      <div class="demo-area">
+        <div id="stream-demo"></div>
+        <div id="stream-output" class="demo-output" style="background: rgba(139, 92, 246, 0.1); opacity: 0.7; font-family: monospace;">
+          <span style="opacity: 0.5;">Type to see it flow...</span>
+        </div>
+      </div>
+
+      <div class="code-block">
+        <code>const stream = new Stream({
+  color: '#8b5cf6',
+  placeholder: 'Type your thoughts...',
+  multiline: false,
+  onChange: (value) => console.log(value)
+});</code>
+      </div>
+    </div>
+
+    <!-- Wave -->
+    <div class="component-section">
+      <div class="component-header">
+        <div class="component-icon">🌊</div>
+        <div class="component-title-group">
+          <h2>Wave</h2>
+          <span class="component-status status-experimental">Experimental</span>
+        </div>
+      </div>
+
+      <p class="component-desc">
+        Press and hold to make the wave grow. Release when it reaches the desired amplitude. The wave naturally decays over time. No dragging - time builds the wave, just like holding water raises the level.
+      </p>
+
+      <div class="demo-area">
+        <div id="wave-demo"></div>
+        <div id="wave-output" class="demo-output" style="text-align: center; background: rgba(16, 185, 129, 0.1);">
+          <span id="wave-emoji" style="font-size: 2rem;">🌗</span>
+          <div style="opacity: 0.6; font-size: 0.9rem; margin-top: 0.5rem;">Drag to adjust</div>
+        </div>
+      </div>
+
+      <div class="code-block">
+        <code>const wave = new Wave({
+  color: '#10b981',
+  label: 'Intensity',
+  min: 0,
+  max: 100,
+  value: 50,
+  growthRate: 40, // How fast it grows
+  decayRate: 5,   // How fast it decays
+  onChange: (value) => console.log(value)
+});</code>
+      </div>
+    </div>
+
+    <!-- Tide -->
+    <div class="component-section">
+      <div class="component-header">
+        <div class="component-icon">🌙</div>
+        <div class="component-title-group">
+          <h2>Tide</h2>
+          <span class="component-status status-experimental">Experimental</span>
+        </div>
+      </div>
+
+      <p class="component-desc">
+        Toggle with inertia. Click works instantly (practical), but the tide rises and falls gradually with momentum. The visual transition takes ~800ms, creating a weighted, natural feel without being annoying.
+      </p>
+
+      <div class="demo-area">
+        <div style="display: flex; justify-content: center; margin: 1rem 0;">
+          <div id="tide-demo"></div>
+        </div>
+        <div id="tide-output" class="demo-output" style="text-align: center; background: rgba(236, 72, 153, 0.1);">
+          <div style="font-size: 1.2rem; font-weight: 500;">🌑 Low Tide</div>
+          <div style="opacity: 0.6; font-size: 0.85rem; margin-top: 0.5rem;">Disabled</div>
+        </div>
+      </div>
+
+      <div class="code-block">
+        <code>const tide = new Tide({
+  color: '#ec4899',
+  label: 'Enable Feature',
+  checked: false,
+  onToggle: (checked) => console.log(checked)
+});</code>
+      </div>
+    </div>
+
   </div>
 
   <footer>
     Built with time as input. No clicks required.<br>
     MIT © <a href="https://github.com/eddystrap">Eddystrap</a>
   </footer>
+
+  <script src="../eddystrap.umd.js"></script>
+  <script>
+    const { Eddy, Pool, Stream, Wave, Tide } = Eddystrap;
+
+    // Pool setup
+    const demoPool = new Pool({
+      color: '#f59e0b',
+      content: `
+        <h2>Welcome to Pool</h2>
+        <p>This is a natural modal alternative. Notice how it flows in rather than popping into existence.</p>
+        <p style="opacity: 0.7; margin-top: 1rem;">Click "Let it Drain" or click outside to close.</p>
+      `
+    });
+    demoPool.mount('body');
+
+    // Eddy demos
+    new Eddy({
+      color: '#10b981',
+      size: 160,
+      label: 'Confirm',
+      sublabel: 'Hold me',
+      onActivate: () => alert('Confirmed!')
+    }).mount('#eddy-confirm');
+
+    new Eddy({
+      color: '#ef4444',
+      size: 160,
+      label: 'Delete',
+      sublabel: 'Hold me',
+      onActivate: () => {
+        if (confirm('Are you sure?')) alert('Deleted!');
+      }
+    }).mount('#eddy-delete');
+
+    // Pool trigger
+    new Eddy({
+      color: '#6366f1',
+      size: 140,
+      label: 'Enter Pool',
+      sublabel: 'Hold me',
+      onActivate: () => demoPool.enter()
+    }).mount('#pool-trigger');
+
+    // Stream
+    new Stream({
+      color: '#8b5cf6',
+      placeholder: 'Type something...',
+      onChange: (value) => {
+        const output = document.getElementById('stream-output');
+        if (value) {
+          output.innerHTML = `<strong>Flowing:</strong> "${value}"`;
+          output.style.opacity = '1';
+        } else {
+          output.innerHTML = '<span style="opacity: 0.5;">Type to see it flow...</span>';
+          output.style.opacity = '0.7';
+        }
+      }
+    }).mount('#stream-demo');
+
+    // Wave
+    new Wave({
+      color: '#10b981',
+      label: 'Wave Intensity',
+      min: 0,
+      max: 100,
+      value: 50,
+      onChange: (value) => {
+        const emoji = document.getElementById('wave-emoji');
+        if (value < 20) emoji.textContent = '🌑';
+        else if (value < 40) emoji.textContent = '🌘';
+        else if (value < 60) emoji.textContent = '🌗';
+        else if (value < 80) emoji.textContent = '🌖';
+        else emoji.textContent = '🌕';
+      }
+    }).mount('#wave-demo');
+
+    // Tide
+    new Tide({
+      color: '#ec4899',
+      label: 'Dark Mode',
+      checked: false,
+      onToggle: (checked) => {
+        const output = document.getElementById('tide-output');
+        if (checked) {
+          output.innerHTML = `
+            <div style="font-size: 1.2rem; font-weight: 500;">🌊 High Tide</div>
+            <div style="opacity: 0.6; font-size: 0.85rem; margin-top: 0.5rem;">Enabled</div>
+          `;
+          output.style.background = 'rgba(236, 72, 153, 0.2)';
+        } else {
+          output.innerHTML = `
+            <div style="font-size: 1.2rem; font-weight: 500;">🌑 Low Tide</div>
+            <div style="opacity: 0.6; font-size: 0.85rem; margin-top: 0.5rem;">Disabled</div>
+          `;
+          output.style.background = 'rgba(236, 72, 153, 0.1)';
+        }
+      }
+    }).mount('#tide-demo');
+  </script>
 </body>
 </html>

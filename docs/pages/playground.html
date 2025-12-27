@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Playground - Eddystrap</title>
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <link rel="stylesheet" href="../shared.css">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .page-header {
+      padding-top: 8rem;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .scenarios {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .scenario-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 3rem;
+      margin-top: 3rem;
+    }
+
+    .scenario-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 2.5rem;
+      min-height: 400px;
+    }
+
+    .scenario-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      color: #ffffff;
+    }
+
+    .scenario-card .subtitle {
+      opacity: 0.6;
+      font-size: 0.9rem;
+      margin-bottom: 2rem;
+    }
+
+    .scenario-content {
+      margin-top: 2rem;
+    }
+
+    .email-item {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .email-item.deleted {
+      opacity: 0;
+      transform: translateX(-100%);
+    }
+
+    .email-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .email-from {
+      font-weight: 500;
+      color: #ffffff;
+    }
+
+    .email-subject {
+      opacity: 0.8;
+      font-size: 0.9rem;
+    }
+
+    .settings-group {
+      margin-bottom: 2rem;
+    }
+
+    .settings-group h4 {
+      font-size: 0.9rem;
+      opacity: 0.6;
+      margin-bottom: 1rem;
+    }
+
+    .volume-display {
+      text-align: center;
+      padding: 2rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      margin-top: 1.5rem;
+    }
+
+    .volume-emoji {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .confirmation-status {
+      text-align: center;
+      padding: 2rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      margin-top: 1.5rem;
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-content">
+      <a href="../index.html" class="logo">Eddystrap</a>
+      <ul class="nav-links">
+        <li><a href="landing.html">Home</a></li>
+        <li><a href="components.html">Components</a></li>
+        <li><a href="playground.html" class="active">Playground</a></li>
+        <li><a href="https://github.com/eddystrap/eddystrap">GitHub</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <h1 class="section-title">Playground</h1>
+    <p style="opacity: 0.7; max-width: 600px; margin: 0 auto;">
+      Real-world scenarios showing how time-based interactions create better UX.
+    </p>
+  </div>
+
+  <div class="scenarios">
+    <div class="scenario-grid">
+
+      <!-- Email Deletion Scenario -->
+      <div class="scenario-card">
+        <h3>🗑️ Delete Email</h3>
+        <p class="subtitle">No accidental deletions. Hold to confirm you really mean it.</p>
+
+        <div class="scenario-content">
+          <div class="email-item" id="email-1">
+            <div class="email-header">
+              <span class="email-from">Newsletter Co.</span>
+              <div id="delete-1"></div>
+            </div>
+            <div class="email-subject">Weekly updates you never read</div>
+          </div>
+
+          <div class="email-item" id="email-2">
+            <div class="email-header">
+              <span class="email-from">Spam Inc.</span>
+              <div id="delete-2"></div>
+            </div>
+            <div class="email-subject">You won a million dollars!</div>
+          </div>
+
+          <div class="email-item" id="email-3">
+            <div class="email-header">
+              <span class="email-from">Important Boss</span>
+              <div id="delete-3"></div>
+            </div>
+            <div class="email-subject">Actually important message</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings Panel Scenario -->
+      <div class="scenario-card">
+        <h3>⚙️ App Settings</h3>
+        <p class="subtitle">Settings that feel natural. Tides rise and fall, values grow and decay.</p>
+
+        <div class="scenario-content">
+          <div class="settings-group">
+            <h4>NOTIFICATIONS</h4>
+            <div id="setting-notifications"></div>
+          </div>
+
+          <div class="settings-group">
+            <h4>DARK MODE</h4>
+            <div id="setting-darkmode"></div>
+          </div>
+
+          <div class="settings-group">
+            <h4>AUTO-SAVE</h4>
+            <div id="setting-autosave"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Volume Control Scenario -->
+      <div class="scenario-card">
+        <h3>🔊 Volume Control</h3>
+        <p class="subtitle">Press and hold to adjust. Watch the wave grow with the volume.</p>
+
+        <div class="scenario-content">
+          <div id="volume-control"></div>
+          <div class="volume-display">
+            <div class="volume-emoji" id="volume-emoji">🔉</div>
+            <div style="opacity: 0.7; font-size: 0.9rem;">Current Volume</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Critical Action Scenario -->
+      <div class="scenario-card">
+        <h3>⚠️ Critical Actions</h3>
+        <p class="subtitle">Deploy to production? Reset database? Hold to build commitment.</p>
+
+        <div class="scenario-content">
+          <div style="display: flex; flex-direction: column; gap: 1.5rem; align-items: center;">
+            <div id="deploy-button"></div>
+            <div id="reset-button"></div>
+          </div>
+
+          <div class="confirmation-status" id="action-status">
+            <div style="opacity: 0.5;">Hold a button to execute critical action</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Message Input Scenario -->
+      <div class="scenario-card">
+        <h3>💬 Message Flow</h3>
+        <p class="subtitle">Text flows into the field. Natural, like thoughts becoming words.</p>
+
+        <div class="scenario-content">
+          <div id="message-input"></div>
+          <div style="margin-top: 1.5rem; padding: 1.5rem; background: rgba(255, 255, 255, 0.05); border-radius: 12px; min-height: 100px;">
+            <div style="opacity: 0.6; font-size: 0.85rem; margin-bottom: 0.5rem;">Preview:</div>
+            <div id="message-preview" style="font-size: 1rem; opacity: 0.8;">Start typing...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Alternative Scenario -->
+      <div class="scenario-card">
+        <h3>🌊 Enter the Pool</h3>
+        <p class="subtitle">Modals that flow in naturally. No jarring popups.</p>
+
+        <div class="scenario-content">
+          <div style="text-align: center; margin-top: 3rem;">
+            <div id="pool-trigger"></div>
+          </div>
+          <div style="margin-top: 2rem; padding: 1.5rem; background: rgba(255, 255, 255, 0.05); border-radius: 12px;">
+            <div style="opacity: 0.7; font-size: 0.9rem; text-align: center;">
+              Hold to enter a pool that flows in with ripples, not a modal that pops into existence.
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    Built with time as input. No clicks required.<br>
+    MIT © <a href="https://github.com/eddystrap">Eddystrap</a>
+  </footer>
+
+  <script src="../eddystrap.umd.js"></script>
+  <script>
+    const { Eddy, Pool, Stream, Wave, Tide } = Eddystrap;
+
+    // Email Deletion Scenario
+    function setupEmailDelete(emailId, deleteId) {
+      new Eddy({
+        color: '#ef4444',
+        size: 36,
+        label: '',
+        sublabel: '',
+        icon: '🗑️',
+        activationTime: 800,
+        onActivate: () => {
+          const email = document.getElementById(emailId);
+          email.classList.add('deleted');
+          setTimeout(() => email.remove(), 300);
+        }
+      }).mount(`#${deleteId}`);
+    }
+
+    setupEmailDelete('email-1', 'delete-1');
+    setupEmailDelete('email-2', 'delete-2');
+    setupEmailDelete('email-3', 'delete-3');
+
+    // Settings Panel Scenario
+    new Tide({
+      color: '#6366f1',
+      label: 'Push Notifications',
+      checked: true,
+      onToggle: (checked) => console.log('Notifications:', checked)
+    }).mount('#setting-notifications');
+
+    new Tide({
+      color: '#8b5cf6',
+      label: 'Dark Mode',
+      checked: false,
+      onToggle: (checked) => console.log('Dark Mode:', checked)
+    }).mount('#setting-darkmode');
+
+    new Tide({
+      color: '#10b981',
+      label: 'Auto-save Documents',
+      checked: true,
+      onToggle: (checked) => console.log('Auto-save:', checked)
+    }).mount('#setting-autosave');
+
+    // Volume Control Scenario
+    new Wave({
+      color: '#f59e0b',
+      label: 'Press & hold to adjust volume',
+      min: 0,
+      max: 100,
+      value: 50,
+      growthRate: 30,
+      decayRate: 10,
+      onChange: (value) => {
+        const emoji = document.getElementById('volume-emoji');
+        if (value < 5) emoji.textContent = '🔇';
+        else if (value < 30) emoji.textContent = '🔈';
+        else if (value < 70) emoji.textContent = '🔉';
+        else emoji.textContent = '🔊';
+      }
+    }).mount('#volume-control');
+
+    // Critical Actions Scenario
+    new Eddy({
+      color: '#10b981',
+      size: 120,
+      label: 'Deploy',
+      sublabel: 'to Production',
+      activationTime: 1000,
+      onActivate: () => {
+        const status = document.getElementById('action-status');
+        status.innerHTML = '<div style="color: #10b981; font-size: 1.2rem;">✅ Deployed to production!</div>';
+        setTimeout(() => {
+          status.innerHTML = '<div style="opacity: 0.5;">Hold a button to execute critical action</div>';
+        }, 3000);
+      }
+    }).mount('#deploy-button');
+
+    new Eddy({
+      color: '#ef4444',
+      size: 120,
+      label: 'Reset',
+      sublabel: 'Database',
+      activationTime: 1200,
+      onActivate: () => {
+        const status = document.getElementById('action-status');
+        status.innerHTML = '<div style="color: #ef4444; font-size: 1.2rem;">⚠️ Database reset!</div>';
+        setTimeout(() => {
+          status.innerHTML = '<div style="opacity: 0.5;">Hold a button to execute critical action</div>';
+        }, 3000);
+      }
+    }).mount('#reset-button');
+
+    // Message Input Scenario
+    new Stream({
+      color: '#8b5cf6',
+      placeholder: 'Type your message...',
+      multiline: true,
+      onChange: (value) => {
+        const preview = document.getElementById('message-preview');
+        preview.textContent = value || 'Start typing...';
+        preview.style.opacity = value ? '1' : '0.5';
+      }
+    }).mount('#message-input');
+
+    // Pool Scenario
+    const demoPool = new Pool({
+      color: '#06b6d4',
+      content: `
+        <h2 style="margin-bottom: 1rem;">Welcome to the Pool</h2>
+        <p style="opacity: 0.8; line-height: 1.6; margin-bottom: 1rem;">
+          Notice how this flows in with ripple animations rather than popping into existence like a traditional modal.
+        </p>
+        <p style="opacity: 0.7; font-size: 0.9rem;">
+          Click "Let it Drain" or click outside to close naturally.
+        </p>
+      `
+    });
+    demoPool.mount('body');
+
+    new Eddy({
+      color: '#06b6d4',
+      size: 120,
+      label: 'Enter Pool',
+      sublabel: 'Hold me',
+      activationTime: 600,
+      onActivate: () => demoPool.enter()
+    }).mount('#pool-trigger');
+  </script>
+</body>
+</html>

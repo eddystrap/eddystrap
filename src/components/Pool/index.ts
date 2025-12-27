@@ -13,7 +13,7 @@ export class Pool {
       color: '#6366f1',
       content: '',
       onDrain: null,
-      ...options
+      ...options,
     };
 
     this.element = document.createElement('div');
@@ -116,9 +116,8 @@ export class Pool {
   }
 
   public mount(target: string | HTMLElement): this {
-    const targetElement = typeof target === 'string'
-      ? document.querySelector<HTMLElement>(target)
-      : target;
+    const targetElement =
+      typeof target === 'string' ? document.querySelector<HTMLElement>(target) : target;
 
     if (!targetElement) {
       throw new Error(`Target element not found: ${target}`);

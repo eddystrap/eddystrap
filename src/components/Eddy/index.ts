@@ -24,7 +24,7 @@ export class Eddy {
       onActivate: null,
       label: 'Eddy',
       sublabel: 'Touch & hold',
-      ...options
+      ...options,
     };
 
     this.element = document.createElement('div');
@@ -95,15 +95,23 @@ export class Eddy {
     this.element.addEventListener('mouseup', () => this.end());
     this.element.addEventListener('mouseleave', () => this.end());
 
-    this.element.addEventListener('touchstart', (e) => {
-      e.preventDefault();
-      this.start(e);
-    }, { passive: false });
+    this.element.addEventListener(
+      'touchstart',
+      (e) => {
+        e.preventDefault();
+        this.start(e);
+      },
+      { passive: false }
+    );
 
-    this.element.addEventListener('touchend', (e) => {
-      e.preventDefault();
-      this.end();
-    }, { passive: false });
+    this.element.addEventListener(
+      'touchend',
+      (e) => {
+        e.preventDefault();
+        this.end();
+      },
+      { passive: false }
+    );
 
     this.element.addEventListener('touchcancel', () => this.end());
   }
@@ -211,7 +219,9 @@ export class Eddy {
     const opacity = 0.5 + (this.commitment / 100) * 0.5;
 
     this.element.style.background = `radial-gradient(circle, ${this.options.color}50, ${this.options.color}20)`;
-    this.element.style.border = `2px solid ${this.options.color}${Math.round(opacity * 255).toString(16).padStart(2, '0')}`;
+    this.element.style.border = `2px solid ${this.options.color}${Math.round(opacity * 255)
+      .toString(16)
+      .padStart(2, '0')}`;
     this.element.style.boxShadow = `
       0 0 ${glow}px ${this.options.color}90,
       inset 0 0 ${glow * 0.5}px ${this.options.color}50
@@ -226,9 +236,8 @@ export class Eddy {
   }
 
   public mount(target: string | HTMLElement): this {
-    const targetElement = typeof target === 'string'
-      ? document.querySelector<HTMLElement>(target)
-      : target;
+    const targetElement =
+      typeof target === 'string' ? document.querySelector<HTMLElement>(target) : target;
 
     if (!targetElement) {
       throw new Error(`Target element not found: ${target}`);

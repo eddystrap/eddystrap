@@ -276,6 +276,24 @@
   </div>
 
   <div class="section">
+    <h2 class="section-title">All Components</h2>
+    <div style="max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 3rem;">
+      <div style="text-align: center;">
+        <h3 style="margin-bottom: 1rem; opacity: 0.9;">Stream - Natural Text Input</h3>
+        <div id="stream-demo" style="display: flex; justify-content: center;"></div>
+      </div>
+      <div style="text-align: center;">
+        <h3 style="margin-bottom: 1rem; opacity: 0.9;">Wave - Natural Slider</h3>
+        <div id="wave-demo" style="display: flex; justify-content: center;"></div>
+      </div>
+      <div style="text-align: center;">
+        <h3 style="margin-bottom: 1rem; opacity: 0.9;">Tide - Natural Toggle</h3>
+        <div id="tide-demo" style="display: flex; justify-content: center;"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
     <h2 class="section-title">Quick Start</h2>
 
     <div class="code-section">
@@ -311,7 +329,7 @@ eddy.mount('#app');</code></pre>
 
   <script src="eddystrap.umd.js"></script>
   <script>
-    const { Eddy, Pool } = Eddystrap;
+    const { Eddy, Pool, Stream, Wave, Tide } = Eddystrap;
 
     // Create demo pool
     const demoPool = new Pool({
@@ -369,6 +387,34 @@ eddy.mount('#app');</code></pre>
     eddy1.mount('#demo');
     eddy2.mount('#demo');
     eddy3.mount('#demo');
+
+    // Stream demo
+    const stream = new Stream({
+      color: '#8b5cf6',
+      placeholder: 'Type your thoughts...',
+      onChange: (value) => console.log('Stream:', value)
+    });
+    stream.mount('#stream-demo');
+
+    // Wave demo
+    const wave = new Wave({
+      color: '#10b981',
+      label: 'Adjust Value',
+      min: 0,
+      max: 100,
+      value: 50,
+      onChange: (value) => console.log('Wave:', value)
+    });
+    wave.mount('#wave-demo');
+
+    // Tide demo
+    const tide = new Tide({
+      color: '#ec4899',
+      label: 'Enable Feature',
+      checked: false,
+      onToggle: (checked) => console.log('Tide:', checked)
+    });
+    tide.mount('#tide-demo');
   </script>
 </body>
 </html>

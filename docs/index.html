@@ -276,20 +276,65 @@
   </div>
 
   <div class="section">
-    <h2 class="section-title">All Components</h2>
-    <div style="max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 3rem;">
-      <div style="text-align: center;">
-        <h3 style="margin-bottom: 1rem; opacity: 0.9;">Stream - Natural Text Input</h3>
-        <div id="stream-demo" style="display: flex; justify-content: center;"></div>
+    <h2 class="section-title">Interactive Playground</h2>
+    <p style="text-align: center; opacity: 0.8; max-width: 600px; margin: 0 auto 3rem;">
+      Explore all components. Watch how they respond naturally to your interactions.
+    </p>
+
+    <div style="max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 4rem;">
+
+      <!-- Stream Demo -->
+      <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 2.5rem;">
+        <h3 style="margin-bottom: 0.5rem; opacity: 0.9;">💧 Stream</h3>
+        <p style="opacity: 0.6; font-size: 0.9rem; margin-bottom: 2rem;">Natural text input with flowing ripples</p>
+        <div id="stream-demo"></div>
+        <div id="stream-output" style="margin-top: 1.5rem; padding: 1rem; background: rgba(139, 92, 246, 0.1); border-radius: 12px; min-height: 60px; opacity: 0.7; font-family: monospace; font-size: 0.9rem;">
+          <span style="opacity: 0.5;">Type to see it flow...</span>
+        </div>
       </div>
-      <div style="text-align: center;">
-        <h3 style="margin-bottom: 1rem; opacity: 0.9;">Wave - Natural Slider</h3>
-        <div id="wave-demo" style="display: flex; justify-content: center;"></div>
+
+      <!-- Wave Demo -->
+      <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 2.5rem;">
+        <h3 style="margin-bottom: 0.5rem; opacity: 0.9;">🌊 Wave</h3>
+        <p style="opacity: 0.6; font-size: 0.9rem; margin-bottom: 2rem;">Natural slider with wave visualization</p>
+        <div id="wave-demo"></div>
+        <div id="wave-output" style="margin-top: 1.5rem; text-align: center; font-size: 2rem; font-weight: 300; opacity: 0.8;">
+          <span id="wave-emoji">🌅</span>
+          <div style="font-size: 0.9rem; opacity: 0.6; margin-top: 0.5rem;">Move the wave to change the mood</div>
+        </div>
       </div>
-      <div style="text-align: center;">
-        <h3 style="margin-bottom: 1rem; opacity: 0.9;">Tide - Natural Toggle</h3>
-        <div id="tide-demo" style="display: flex; justify-content: center;"></div>
+
+      <!-- Tide Demo -->
+      <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 2.5rem;">
+        <h3 style="margin-bottom: 0.5rem; opacity: 0.9;">🌙 Tide</h3>
+        <p style="opacity: 0.6; font-size: 0.9rem; margin-bottom: 2rem;">Natural toggle using ebb and flow</p>
+        <div style="display: flex; justify-content: center; margin-bottom: 1.5rem;">
+          <div id="tide-demo"></div>
+        </div>
+        <div id="tide-output" style="text-align: center; padding: 1.5rem; background: rgba(236, 72, 153, 0.1); border-radius: 12px; transition: all 0.5s ease;">
+          <div style="font-size: 1.2rem; font-weight: 500;">🌑 Low Tide</div>
+          <div style="opacity: 0.6; font-size: 0.85rem; margin-top: 0.5rem;">Feature is disabled</div>
+        </div>
       </div>
+
+      <!-- Eddy Combinations -->
+      <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 2.5rem;">
+        <h3 style="margin-bottom: 0.5rem; opacity: 0.9;">🔄 Combined Example</h3>
+        <p style="opacity: 0.6; font-size: 0.9rem; margin-bottom: 2rem;">Use multiple components together</p>
+
+        <div style="display: flex; flex-direction: column; gap: 2rem;">
+          <div id="combo-stream"></div>
+          <div id="combo-wave"></div>
+          <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;">
+            <div id="combo-eddy1"></div>
+            <div id="combo-eddy2"></div>
+          </div>
+          <div id="combo-result" style="padding: 1.5rem; background: rgba(16, 185, 129, 0.1); border-radius: 12px; text-align: center; min-height: 80px; display: flex; align-items: center; justify-content: center; opacity: 0.7;">
+            <span style="opacity: 0.5;">Fill in your details and press Confirm to see the magic...</span>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -388,33 +433,130 @@ eddy.mount('#app');</code></pre>
     eddy2.mount('#demo');
     eddy3.mount('#demo');
 
-    // Stream demo
+    // Stream demo with live output
     const stream = new Stream({
       color: '#8b5cf6',
       placeholder: 'Type your thoughts...',
-      onChange: (value) => console.log('Stream:', value)
+      onChange: (value) => {
+        const output = document.getElementById('stream-output');
+        if (value) {
+          output.innerHTML = `<strong>Flowing:</strong> "${value}"`;
+          output.style.opacity = '1';
+        } else {
+          output.innerHTML = '<span style="opacity: 0.5;">Type to see it flow...</span>';
+          output.style.opacity = '0.7';
+        }
+      }
     });
     stream.mount('#stream-demo');
 
-    // Wave demo
+    // Wave demo with emoji mood indicator
     const wave = new Wave({
       color: '#10b981',
-      label: 'Adjust Value',
+      label: 'Mood Wave',
       min: 0,
       max: 100,
       value: 50,
-      onChange: (value) => console.log('Wave:', value)
+      onChange: (value) => {
+        const emoji = document.getElementById('wave-emoji');
+        if (value < 20) emoji.textContent = '🌑'; // Very low
+        else if (value < 40) emoji.textContent = '🌘'; // Low
+        else if (value < 60) emoji.textContent = '🌗'; // Medium
+        else if (value < 80) emoji.textContent = '🌖'; // High
+        else emoji.textContent = '🌕'; // Very high
+      }
     });
     wave.mount('#wave-demo');
 
-    // Tide demo
+    // Tide demo with visual feedback
     const tide = new Tide({
       color: '#ec4899',
-      label: 'Enable Feature',
+      label: 'Dark Mode',
       checked: false,
-      onToggle: (checked) => console.log('Tide:', checked)
+      onToggle: (checked) => {
+        const output = document.getElementById('tide-output');
+        if (checked) {
+          output.innerHTML = `
+            <div style="font-size: 1.2rem; font-weight: 500;">🌊 High Tide</div>
+            <div style="opacity: 0.6; font-size: 0.85rem; margin-top: 0.5rem;">Feature is enabled</div>
+          `;
+          output.style.background = 'rgba(236, 72, 153, 0.2)';
+        } else {
+          output.innerHTML = `
+            <div style="font-size: 1.2rem; font-weight: 500;">🌑 Low Tide</div>
+            <div style="opacity: 0.6; font-size: 0.85rem; margin-top: 0.5rem;">Feature is disabled</div>
+          `;
+          output.style.background = 'rgba(236, 72, 153, 0.1)';
+        }
+      }
     });
     tide.mount('#tide-demo');
+
+    // Combined example - a mini form
+    let formData = { name: '', intensity: 50 };
+
+    const comboStream = new Stream({
+      color: '#6366f1',
+      placeholder: 'Enter your name...',
+      onChange: (value) => {
+        formData.name = value;
+      }
+    });
+    comboStream.mount('#combo-stream');
+
+    const comboWave = new Wave({
+      color: '#f59e0b',
+      label: 'Energy Level',
+      min: 0,
+      max: 100,
+      value: 50,
+      onChange: (value) => {
+        formData.intensity = value;
+      }
+    });
+    comboWave.mount('#combo-wave');
+
+    const comboEddy1 = new Eddy({
+      color: '#10b981',
+      size: 140,
+      label: 'Confirm',
+      sublabel: 'Press & hold',
+      onActivate: () => {
+        const result = document.getElementById('combo-result');
+        if (!formData.name) {
+          result.innerHTML = `<span style="color: #f59e0b;">⚠️ Please enter your name first!</span>`;
+          return;
+        }
+        const emoji = formData.intensity < 30 ? '😴' : formData.intensity < 70 ? '😊' : '🔥';
+        result.innerHTML = `
+          <div>
+            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">${emoji}</div>
+            <div style="font-size: 1.2rem; font-weight: 500;">Welcome, ${formData.name}!</div>
+            <div style="opacity: 0.7; margin-top: 0.5rem;">Energy Level: ${formData.intensity}%</div>
+          </div>
+        `;
+        result.style.opacity = '1';
+        result.style.background = 'rgba(16, 185, 129, 0.2)';
+      }
+    });
+    comboEddy1.mount('#combo-eddy1');
+
+    const comboEddy2 = new Eddy({
+      color: '#ef4444',
+      size: 140,
+      label: 'Reset',
+      sublabel: 'Press & hold',
+      onActivate: () => {
+        comboStream.clear();
+        comboWave.setValue(50);
+        formData = { name: '', intensity: 50 };
+        const result = document.getElementById('combo-result');
+        result.innerHTML = '<span style="opacity: 0.5;">Fill in your details and press Confirm to see the magic...</span>';
+        result.style.opacity = '0.7';
+        result.style.background = 'rgba(16, 185, 129, 0.1)';
+      }
+    });
+    comboEddy2.mount('#combo-eddy2');
   </script>
 </body>
 </html>

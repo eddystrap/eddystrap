@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Eddystrap - Natural Kinetic UI Components</title>
+  <meta name="description" content="Natural kinetic UI components for the web. Time as input, not clicks.">
+
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0f1419 100%);
+      color: #ffffff;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      position: relative;
+    }
+
+    .hero-title {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: clamp(3rem, 10vw, 7rem);
+      font-weight: 300;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-align: center;
+      line-height: 1.1;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(1.2rem, 3vw, 1.8rem);
+      font-weight: 300;
+      opacity: 0.8;
+      margin-bottom: 3rem;
+      text-align: center;
+      max-width: 600px;
+    }
+
+    .hero-demo {
+      margin: 4rem 0;
+      display: flex;
+      gap: 3rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      gap: 0.5rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .badge img {
+      height: 20px;
+    }
+
+    .section {
+      padding: 6rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 300;
+      margin-bottom: 3rem;
+      text-align: center;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .feature {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 2rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .feature-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .feature-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .feature-desc {
+      opacity: 0.7;
+      line-height: 1.6;
+    }
+
+    .code-section {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-top: 2rem;
+      overflow-x: auto;
+    }
+
+    pre {
+      margin: 0;
+      font-family: 'Monaco', 'Courier New', monospace;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    code {
+      color: #a5b4fc;
+    }
+
+    .cta {
+      text-align: center;
+      padding: 6rem 2rem;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+
+    .btn {
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 500;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: white;
+      border: none;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+    }
+
+    footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      opacity: 0.5;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    @media (max-width: 768px) {
+      .hero-demo {
+        gap: 2rem;
+      }
+
+      .section {
+        padding: 4rem 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <h1 class="hero-title">Eddystrap</h1>
+    <p class="hero-subtitle">Natural kinetic UI components for the web. Time as input, not clicks.</p>
+
+    <div class="badge">
+      <img src="https://img.shields.io/badge/TypeScript-5.9-blue.svg" alt="TypeScript">
+      <img src="https://img.shields.io/badge/Bundle-2.8KB-success.svg" alt="Bundle Size">
+      <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License">
+    </div>
+
+    <div class="hero-demo" id="demo"></div>
+
+    <p style="opacity: 0.6; margin-top: 2rem; font-size: 0.9rem;">
+      ↑ Try them • Press and hold to activate
+    </p>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">Philosophy</h2>
+    <div style="max-width: 800px; margin: 0 auto; text-align: center; line-height: 1.8; opacity: 0.9;">
+      <p style="margin-bottom: 1.5rem;">
+        Traditional UIs are built on <strong>clicks</strong> - binary, instant decisions. Eddystrap is different.
+      </p>
+      <p style="margin-bottom: 1.5rem;">
+        We use <strong>time as input</strong>. Holding builds commitment. Duration matters.
+        Everything flows with <strong>kinetic feedback</strong> and <strong>natural metaphors</strong>.
+      </p>
+      <p>
+        No traditional buttons. Just natural interaction.
+      </p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">Features</h2>
+    <div class="features">
+      <div class="feature">
+        <div class="feature-icon">✨</div>
+        <div class="feature-title">TypeScript Native</div>
+        <div class="feature-desc">Full type definitions included. IntelliSense everywhere.</div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🎯</div>
+        <div class="feature-title">Zero Dependencies</div>
+        <div class="feature-desc">Completely standalone. No external packages required.</div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">📦</div>
+        <div class="feature-title">Tiny Bundle</div>
+        <div class="feature-desc">~2.8KB gzipped. Optimized for performance.</div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">📱</div>
+        <div class="feature-title">Mobile-First</div>
+        <div class="feature-desc">Touch events built-in. Works perfectly on all devices.</div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">⚡</div>
+        <div class="feature-title">Lightning Fast</div>
+        <div class="feature-desc">Built with Vite. Smooth 60fps animations.</div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🎨</div>
+        <div class="feature-title">Customizable</div>
+        <div class="feature-desc">Colors, sizes, timing - everything is configurable.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">Quick Start</h2>
+
+    <div class="code-section">
+      <pre><code>npm install eddystrap</code></pre>
+    </div>
+
+    <div class="code-section">
+<pre><code>import { Eddy, Pool } from 'eddystrap';
+import 'eddystrap/styles.css';
+
+const eddy = new Eddy({
+  color: '#6366f1',
+  label: 'Confirm',
+  onActivate: () => console.log('Committed!')
+});
+
+eddy.mount('#app');</code></pre>
+    </div>
+  </div>
+
+  <div class="cta">
+    <h2 class="section-title">Get Started</h2>
+    <div class="cta-buttons">
+      <a href="https://github.com/eddystrap/eddystrap" class="btn btn-primary">View on GitHub</a>
+      <a href="https://www.npmjs.com/package/eddystrap" class="btn btn-secondary">npm Package</a>
+    </div>
+  </div>
+
+  <footer>
+    Built with time as input. No clicks required.<br>
+    MIT © <a href="https://github.com/eddystrap" style="color: inherit;">Eddystrap</a>
+  </footer>
+
+  <script src="eddystrap.umd.js"></script>
+  <script>
+    const { Eddy, Pool } = Eddystrap;
+
+    // Create demo pool
+    const demoPool = new Pool({
+      color: '#f59e0b',
+      content: `
+        <h2>Welcome to Eddystrap</h2>
+        <p>
+          You just activated an Eddy by pressing and holding. This Pool appeared
+          using natural flow metaphors.
+        </p>
+        <p>
+          Notice how the UI feels alive? That's kinetic feedback in action.
+          Time became your input, not just a click.
+        </p>
+        <p style="opacity: 0.7; font-size: 0.9rem; margin-top: 2rem;">
+          Click "Let it Drain" or click outside to close.
+        </p>
+      `
+    });
+    demoPool.mount('body');
+
+    // Create demo eddies
+    const eddy1 = new Eddy({
+      color: '#10b981',
+      size: 180,
+      label: 'Confirm',
+      sublabel: 'Press & hold',
+      onActivate: () => {
+        demoPool.enter();
+      }
+    });
+
+    const eddy2 = new Eddy({
+      color: '#6366f1',
+      size: 180,
+      label: 'Submit',
+      sublabel: 'Press & hold',
+      onActivate: () => {
+        alert('Submitted! 🌊');
+      }
+    });
+
+    const eddy3 = new Eddy({
+      color: '#ec4899',
+      size: 180,
+      label: 'Delete',
+      sublabel: 'Press & hold',
+      onActivate: () => {
+        if (confirm('Are you sure?')) {
+          alert('Deleted! 🗑️');
+        }
+      }
+    });
+
+    eddy1.mount('#demo');
+    eddy2.mount('#demo');
+    eddy3.mount('#demo');
+  </script>
+</body>
+</html>
